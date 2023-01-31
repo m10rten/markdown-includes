@@ -8,7 +8,15 @@ import { getKeyValue, hasKey } from "./utils/cli";
 import watch from "node-watch";
 
 const main = async () => {
-  if (hasKey(process.argv, "--help") || hasKey(process.argv, "-h")) {
+  if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    console.info(require("../package.json").version);
+    return process.exit(0);
+  }
+
+  log("Starting compiler...");
+  const args = process.argv.slice(2);
+  if (args.length < 1 || !args[0] || hasKey(process.argv, "--help") || hasKey(process.argv, "-h")) {
     console.info(`
     Usage: mdi <file> [options]
     Options:
@@ -18,18 +26,9 @@ const main = async () => {
       --help, -h      Show this help message.
       --version, -v   Show version.
     `);
-    return process.exit(0);
-  }
-  if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    console.info(require("../package.json").version);
-    return process.exit(0);
-  }
+    console.log(`To get started, run \`mdi <file>\`.`);
 
-  log("Starting compiler...");
-  const args = process.argv.slice(2);
-  if (args.length < 1) {
-    throw new Error("No file name provided");
+    return process.exit(0);
   }
   const path = args[0];
   const content = await read(path);
