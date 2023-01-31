@@ -6,7 +6,7 @@ Compile multiple Markdown files into 1 using a simple script.
 
 1. Create a markdown file with `&|>` in it. This is a notation to tell the compiler to include the contents of another file.
 2. Install the compiler using `npm install -g markdown-includes`.
-3. Run the compiler using `mdc <input file>`.
+3. Run the compiler using `mdi <input file> [options]`.
 
 ### Options
 
