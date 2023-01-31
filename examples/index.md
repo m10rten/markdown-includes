@@ -3,3 +3,5 @@
 &|> menu/menu.md
 
 ## Examples
+
+### Index

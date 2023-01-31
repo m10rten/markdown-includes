@@ -1,6 +1,6 @@
 {
   "name": "markdown-includes",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Compile multiple Markdown files into 1 using a simple script.",
   "main": "dist/index.js",
   "scripts": {
@@ -15,7 +15,7 @@
     "check:version": "npx @jetvil/cli version --package markdown-includes"
   },
   "bin": {
-    "mdc": "dist/index.js"
+    "mdi": "dist/index.js"
   },
   "repository": {
     "type": "git",
@@ -47,5 +47,8 @@
   "engines": {
     "node": ">=18.0.0",
     "npm": ">=8.0.0"
+  },
+  "dependencies": {
+    "node-watch": "^0.7.3"
   }
 }
