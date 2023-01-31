@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#! /usr/bin/env ts-node-script
 /* eslint-disable no-console */
 
 import { mkdir } from "fs/promises";
