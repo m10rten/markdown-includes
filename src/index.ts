@@ -8,28 +8,8 @@ import { getKeyValue, hasKey } from "./utils/cli";
 import watch from "node-watch";
 
 const main = async () => {
-  if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    console.info(require("../package.json").version);
-    return process.exit(0);
-  }
-
   log("Starting compiler...");
   const args = process.argv.slice(2);
-  if (args.length < 1 || !args[0] || hasKey(process.argv, "--help") || hasKey(process.argv, "-h")) {
-    console.info(`
-    Usage: mdi <file> [options]
-    Options:
-      --out <file>    Output file path.
-      --watch, -w     Watch for changes.
-      --debug         Show debug messages.
-      --help, -h      Show this help message.
-      --version, -v   Show version.
-    `);
-    console.log(`To get started, run \`mdi <file>\`.`);
-
-    return process.exit(0);
-  }
   const path = args[0];
   const content = await read(path);
 
@@ -39,9 +19,12 @@ const main = async () => {
   const parse = async (str: string, dir: string) => {
     log("Parsing (sub)content...");
     const lines: Array<string> = [];
+    let includeMenu = false;
+
     for await (const line of str.split("\n")) {
       if (line.startsWith("&|>")) {
         const filePath = line.slice(3).trim(); // remove the `&|>` and trim the spaces.
+
         if (!filePath) throw new SyntaxError("No file path provided after `&|>`");
         const innerDir = dir + "/" + filePath.split("/").slice(0, -1).join("/");
 
@@ -52,10 +35,48 @@ const main = async () => {
         const inner = await parse(fileContent, innerDir);
 
         lines.push(...inner);
+      } else if (line.startsWith("&|menu")) {
+        includeMenu = true;
+        lines.push(line);
       } else {
         lines.push(line);
       }
     }
+
+    if (includeMenu) {
+      log("Adding menu...");
+      const titles: Array<string> = lines
+        .filter((line) => line.startsWith("#") || line.startsWith("##") || line.startsWith("###"))
+        .map((line) => line.trim());
+
+      const menuPosition = lines.findIndex((line) => line.trim() === "&|menu");
+      log("Creating menu...");
+      const menu = titles
+        .map((title) =>
+          title.startsWith("###")
+            ? `    - [${title.replaceAll("###", "").trim()}](#${title
+                .toLowerCase()
+                .replace(/ /g, "-")
+                .replaceAll("###", "")
+                .trim()})`
+            : title.startsWith("##")
+            ? `  - [${title.replaceAll("##", "").trim()}](#${title
+                .toLowerCase()
+                .replace(/ /g, "-")
+                .replaceAll("##", "")
+                .trim()})`
+            : `- [${title.replaceAll("#", "").trim()}](#${title
+                .toLowerCase()
+                .replace(/ /g, "-")
+                .replaceAll("#", "")
+                .trim()})`,
+        )
+        .join("\n");
+      lines.splice(menuPosition + 1, 0, menu);
+      // remove the `&|menu` line.
+      lines.splice(menuPosition, 1);
+    }
+
     return lines;
   };
 
@@ -64,7 +85,7 @@ const main = async () => {
     finalFile
       .join("\n")
       .trim()
-      .replace(/^\s*[\r]|^\s+| +(?= )| +$|\s+$(?![^])/gm, "\n") + "\n";
+      .replace(/\n{2,}/g, "\n") + "\n";
 
   const out: string | null = getKeyValue(args, "--out") ?? null;
   log("Creating output file...");
@@ -82,16 +103,46 @@ const main = async () => {
   return;
 };
 
-console.info(`Thanks for using markdown-includes!💗`);
-if (hasKey(process.argv, "--watch") || hasKey(process.argv, "-w")) {
-  const path = process.argv.slice(2)[0];
-  const root = path.split("/").slice(0, -1).join("/");
-  console.info("Watching for changes...");
-  watch(root, { recursive: true }, async (event, name) => {
-    console.info("File changed, recompiling...", event, name);
-    await main();
-  });
-} else {
-  main();
-  log("Done!");
-}
+(async () => {
+  try {
+    if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      console.info(require("../package.json").version);
+      process.exit(0);
+    }
+
+    console.info(`Thanks for using markdown-includes!💗`);
+    const args = process.argv.slice(2);
+
+    if (args.length < 1 || !args[0] || hasKey(process.argv, "--help") || hasKey(process.argv, "-h")) {
+      console.info(`
+    Usage: mdi <file> [options]
+    Options:
+      --out <file>    Output file path.
+      --watch, -w     Watch for changes.
+      --debug         Show debug messages.
+      --help, -h      Show this help message.
+      --version, -v   Show version.
+    `);
+      console.log(`To get started, run \`mdi <file>\`.`);
+
+      process.exit(0);
+    }
+
+    if (hasKey(process.argv, "--watch") || hasKey(process.argv, "-w")) {
+      const path = process.argv.slice(2)[0];
+      const root = path.split("/").slice(0, -1).join("/");
+      console.info("Watching for changes...");
+      watch(root, { recursive: true }, async (event, name: string) => {
+        console.info("File changed, recompiling...", event, name);
+        await main();
+      });
+    } else {
+      await main();
+      log("Done!");
+    }
+  } catch (error) {
+    console.error(error);
+    process.exit(1);
+  }
+})();

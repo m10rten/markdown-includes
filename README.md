@@ -18,12 +18,12 @@ Compile multiple Markdown files into 1 using a simple script.
 
 ## Example
 
-### Input
+### Include file
 
 ```markdown
 # Title
 
-&|> ./include.md
+&|> include.md
 ```
 
 ### Output
