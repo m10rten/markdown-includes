@@ -46,7 +46,10 @@ const main = async () => {
     if (includeMenu) {
       log("Adding menu...");
       const titles: Array<string> = lines
-        .filter((line) => line.startsWith("#") || line.startsWith("##") || line.startsWith("###"))
+        .filter(
+          (line) =>
+            line.startsWith("#") || line.startsWith("##") || (line.startsWith("###") && !line.startsWith("####")),
+        )
         .map((line) => line.trim());
 
       const menuPosition = lines.findIndex((line) => line.trim() === "&|menu");
@@ -81,11 +84,8 @@ const main = async () => {
   };
 
   const finalFile = await parse(content, root);
-  const cleaned =
-    finalFile
-      .join("\n")
-      .trim()
-      .replace(/\n{2,}/g, "\n") + "\n";
+  log("Cleaning up...");
+  const cleaned = finalFile.join("\n").trim() + "\n";
 
   const out: string | null = getKeyValue(args, "--out") ?? null;
   log("Creating output file...");
