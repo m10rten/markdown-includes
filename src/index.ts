@@ -48,31 +48,22 @@ const main = async () => {
       const titles: Array<string> = lines
         .filter(
           (line) =>
-            line.startsWith("#") || line.startsWith("##") || (line.startsWith("###") && !line.startsWith("####")),
-        )
+            line.split("").filter((char) => char === "#").length > 0 &&
+            line.split("").filter((char) => char === "#").length < 4,
+        ) // this will filter out all lines that don't have a `#` or have more than 3 `#`,
+        // titles with `#` after the title are not supported.
         .map((line) => line.trim());
 
       const menuPosition = lines.findIndex((line) => line.trim() === "&|menu");
-      log("Creating menu...");
+      log("Creating menu...", titles);
+      const item = (title: string) => title.toLowerCase().replaceAll("#", "").trim().replace(/ /g, "-");
       const menu = titles
         .map((title) =>
           title.startsWith("###")
-            ? `    - [${title.replaceAll("###", "").trim()}](#${title
-                .toLowerCase()
-                .replace(/ /g, "-")
-                .replaceAll("###", "")
-                .trim()})`
+            ? `    - [${title.replaceAll("#", "").trim()}](#${item(title)})`
             : title.startsWith("##")
-            ? `  - [${title.replaceAll("##", "").trim()}](#${title
-                .toLowerCase()
-                .replace(/ /g, "-")
-                .replaceAll("##", "")
-                .trim()})`
-            : `- [${title.replaceAll("#", "").trim()}](#${title
-                .toLowerCase()
-                .replace(/ /g, "-")
-                .replaceAll("#", "")
-                .trim()})`,
+            ? `  - [${title.replaceAll("#", "").trim()}](#${item(title)})`
+            : `- [${title.replaceAll("#", "").trim()}](#${item(title)})`,
         )
         .join("\n");
       lines.splice(menuPosition + 1, 0, menu);

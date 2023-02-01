@@ -16,9 +16,11 @@ Compile multiple Markdown files into 1 using a simple script.
 - `--help` | `-h`: Show the help.
 - `--watch` | `-w`: Watch the input file for changes and recompile when it changes.
 
-## Example
+## Examples
 
 ### Include file
+
+#### Input
 
 ```markdown
 # Title
@@ -26,12 +28,40 @@ Compile multiple Markdown files into 1 using a simple script.
 &|> include.md
 ```
 
-### Output
+#### Output
 
 ```markdown
 # Title
 
 This is the included file.
+```
+
+### Include menu
+
+#### Input
+
+```markdown
+# Document
+
+&|menu
+
+## Test
+
+### Sub item
+```
+
+#### Output
+
+```markdown
+# Document
+
+- [Document](#document)
+  - [Test](#test)
+    - [Sub item](#sub-item)
+
+## Test
+
+### Sub item
 ```
 
 ## License

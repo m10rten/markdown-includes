@@ -1,6 +1,6 @@
 {
   "name": "markdown-includes",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "🎯 Compile multiple Markdown files into 1 using a simple script.",
   "main": "dist/index.js",
   "scripts": {
