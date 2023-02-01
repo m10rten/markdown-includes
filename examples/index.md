@@ -6,7 +6,7 @@
 
 ## Examples
 
-### Index
+### 1. Index
 
 dit is content
 

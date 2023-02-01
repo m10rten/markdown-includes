@@ -45,7 +45,7 @@ This is the included file.
 
 &|menu
 
-## Test
+## 1. Test
 
 ### Sub item
 ```
@@ -56,7 +56,7 @@ This is the included file.
 # Document
 
 - [Document](#document)
-  - [Test](#test)
+  - [1. Test](#1-test)
     - [Sub item](#sub-item)
 
 ## Test

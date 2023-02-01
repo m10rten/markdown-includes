@@ -55,8 +55,11 @@ const main = async () => {
         .map((line) => line.trim());
 
       const menuPosition = lines.findIndex((line) => line.trim() === "&|menu");
-      log("Creating menu...", titles);
-      const item = (title: string) => title.toLowerCase().replaceAll("#", "").trim().replace(/ /g, "-");
+      log("Creating menu...");
+
+      const item = (title: string) =>
+        title.toLowerCase().replaceAll("#", "").replaceAll(".", "").trim().replace(/ /g, "-");
+
       const menu = titles
         .map((title) =>
           title.startsWith("###")
