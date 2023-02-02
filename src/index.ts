@@ -20,6 +20,7 @@ const main = async () => {
     log("Parsing (sub)content...");
     const lines: Array<string> = [];
     let includeMenu = false;
+    let removeComments = false;
 
     for await (const line of str.split("\n")) {
       if (line.startsWith("&|>")) {
@@ -37,6 +38,9 @@ const main = async () => {
         lines.push(...inner);
       } else if (line.startsWith("&|menu")) {
         includeMenu = true;
+        lines.push(line);
+      } else if (line.startsWith("&|no_comments")) {
+        removeComments = true;
         lines.push(line);
       } else {
         lines.push(line);
@@ -57,16 +61,16 @@ const main = async () => {
       const menuPosition = lines.findIndex((line) => line.trim() === "&|menu");
       log("Creating menu...");
 
-      const item = (title: string) =>
+      const item = (title: string): string =>
         title.toLowerCase().replaceAll("#", "").replaceAll(".", "").trim().replace(/ /g, "-");
-
+      const link = (title: string): string => `- [${title.replaceAll("#", "").trim()}](#${item(title)})`;
       const menu = titles
         .map((title) =>
           title.startsWith("###")
-            ? `    - [${title.replaceAll("#", "").trim()}](#${item(title)})`
+            ? `    ${link(title)}`
             : title.startsWith("##")
-            ? `  - [${title.replaceAll("#", "").trim()}](#${item(title)})`
-            : `- [${title.replaceAll("#", "").trim()}](#${item(title)})`,
+            ? `  ${link(title)}`
+            : `${link(title)}`,
         )
         .join("\n");
       lines.splice(menuPosition + 1, 0, menu);
@@ -74,10 +78,28 @@ const main = async () => {
       lines.splice(menuPosition, 1);
     }
 
+    if (removeComments) {
+      const preMerged = lines.join("\n");
+      const merged = preMerged.replaceAll(/<!--[^]*?-->/gm, "");
+      const noCommand = merged.replaceAll(/&\|no_comments/gm, "");
+      return noCommand.split("\n");
+    }
+
     return lines;
   };
 
   const finalFile = await parse(content, root);
+
+  log("Removing empty lines...");
+  for (let i = 0; i < finalFile.length; i++) {
+    // remove empty lines
+    if (!finalFile[i] || !finalFile[i + 1]) continue;
+    if (finalFile[i].trim() === "" && finalFile[i + 1].trim() === "") {
+      finalFile.splice(i, 1);
+      i--;
+    }
+  }
+
   log("Cleaning up...");
   const cleaned = finalFile.join("\n").trim() + "\n";
 
@@ -126,6 +148,7 @@ const main = async () => {
     if (hasKey(process.argv, "--watch") || hasKey(process.argv, "-w")) {
       const path = process.argv.slice(2)[0];
       const root = path.split("/").slice(0, -1).join("/");
+      await main();
       console.info("Watching for changes...");
       watch(root, { recursive: true }, async (event, name: string) => {
         console.info("File changed, recompiling...", event, name);

@@ -1,13 +1,15 @@
 # Title: Examples
 
+&|no_comments
+
 &|menu
 
-&|> menu/menu.md
+&|> chapters/about.md
 
 ## Examples
 
 ### 1. Index
 
-dit is content
+dit is content <!-- inline comment -->
 
 #### Hiho
