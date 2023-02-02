@@ -64,6 +64,30 @@ This is the included file.
 ### Sub item
 ```
 
+### No comments in output file
+
+No more removing comments, just use this tag and all comments (inline, single or multi-line) will be stripped from the output.
+
+#### Input
+
+```markdown
+&|no_comments
+
+## Markdown test
+
+Lorum ipsum
+
+<!-- this is a comment -->
+```
+
+#### Output
+
+```markdown
+## Markdown test
+
+Lorum ipsum
+```
+
 ## License
 
 MIT
