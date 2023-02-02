@@ -4,7 +4,7 @@
 
 &|menu
 
-&|> chapters/about.md
+&|include chapters/about.md
 
 ## Examples
 

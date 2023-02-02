@@ -13,7 +13,7 @@ const main = async () => {
   const path = args[0];
   const content = await read(path);
 
-  // for each `&|>` in content, import the file and replace it in the content.
+  // for each `&|include` in content, import the file and replace it in the content.
   const root = path.split("/").slice(0, -1).join("/");
 
   const parse = async (str: string, dir: string) => {
@@ -23,10 +23,10 @@ const main = async () => {
     let removeComments = false;
 
     for await (const line of str.split("\n")) {
-      if (line.startsWith("&|>")) {
-        const filePath = line.slice(3).trim(); // remove the `&|>` and trim the spaces.
+      if (line.startsWith("&|include")) {
+        const filePath = line.slice(3).trim(); // remove the `&|include` and trim the spaces.
 
-        if (!filePath) throw new SyntaxError("No file path provided after `&|>`");
+        if (!filePath) throw new SyntaxError("No file path provided after `&|include`");
         const innerDir = dir + "/" + filePath.split("/").slice(0, -1).join("/");
 
         const fileName = filePath.split("/").slice(-1)[0];

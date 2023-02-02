@@ -1,12 +1,52 @@
 # markdown-includes
 
-Compile multiple Markdown files into 1 using a simple script.
+[![Bundle size](https://img.shields.io/bundlephobia/min/markdown-includes/latest?style=for-the-badge&color=3178c6)](https://bundlephobia.com/package/markdown-includes@latest)&nbsp;
+[![Downloads](https://img.shields.io/npm/dt/markdown-includes?style=for-the-badge)](https://www.npmjs.com/package/markdown-includes)&nbsp;
+[![License](https://img.shields.io/npm/l/markdown-includes?style=for-the-badge&color=efb103)](https://github.com/m10rten/markdown-includes/blob/main/LICENSE)&nbsp;
+[![Version](https://img.shields.io/npm/v/markdown-includes?style=for-the-badge&color=cb3837&logo=npm)](https://www.npmjs.com/package/markdown-includes)&nbsp;
+[![GitHub Repo stars](https://img.shields.io/github/stars/m10rten/markdown-includes?color=E9E9E9&logo=Github&style=for-the-badge)](https://www.github.com/m10rten/markdown-includes)&nbsp;
+[![GitHub issues](https://img.shields.io/github/issues-raw/m10rten/markdown-includes?label=issues&style=for-the-badge)](https://www.github.com/m10rten/markdown-includes/issues)
+
+Compile multiple Markdown files into 1 using a simple script, use it to create a menu, remove comments, etc.
+
+## Features
+
+- ✅ Easy to use within your new or existing projects.
+- ⌚ Compile multiple Markdown files into 1 with the `&|include` include tag.
+- 🗃️ Create a menu of contents with the `&|menu` tag.
+- 🧹 Remove comments from output file with the `&|no_comments` tag.
 
 ## Usage
 
-1. Create a markdown file with `&|>` in it. This is a notation to tell the compiler to include the contents of another file.
-2. Install the compiler using `npm install -g markdown-includes`.
-3. Run the compiler using `mdi <input file> [options]`.
+1. Create a markdown file with any name, e.g. `index.md`.
+2. Install the compiler globally or locally in your project:
+
+   ```bash
+   # npm
+   npm install -g markdown-includes
+
+   # or yarn
+   yarn global add markdown-includes
+
+   # or pnpm
+   pnpm install -g markdown-includes
+   ```
+
+   Or install it locally in your project:
+
+   ```bash
+   # npm
+   npm install markdown-includes
+   ```
+
+3. Run the compiler:
+   ```bash
+   mdi <input file> [options]
+   ```
+   Or if you installed it locally:
+   ```bash
+   npx mdi <input file> [options]
+   ```
 
 ### Options
 
@@ -25,7 +65,7 @@ Compile multiple Markdown files into 1 using a simple script.
 ```markdown
 # Title
 
-&|> include.md
+&|include include.md
 ```
 
 #### Output

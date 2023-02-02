@@ -2,4 +2,4 @@
 
 Dit is de about me
 
-&|> detailed.md
+&|include detailed.md
