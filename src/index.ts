@@ -24,7 +24,7 @@ const main = async () => {
 
     for await (const line of str.split("\n")) {
       if (line.startsWith("&|include")) {
-        const filePath = line.slice(3).trim(); // remove the `&|include` and trim the spaces.
+        const filePath = line.slice("&|include".length).trim(); // remove the `&|include` and trim the spaces.
 
         if (!filePath) throw new SyntaxError("No file path provided after `&|include`");
         const innerDir = dir + "/" + filePath.split("/").slice(0, -1).join("/");

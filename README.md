@@ -12,7 +12,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 ## Features
 
 - ✅ Easy to use within your new or existing projects.
-- ⌚ Compile multiple Markdown files into 1 with the `&|include` include tag.
+- ⌚ Compile multiple Markdown files into 1 with the `&|include` tag.
 - 🗃️ Create a menu of contents with the `&|menu` tag.
 - 🧹 Remove comments from output file with the `&|no_comments` tag.
 
