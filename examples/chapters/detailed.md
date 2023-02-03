@@ -4,6 +4,6 @@
     Multi line comment
 -->
 
-Dit is de detailed about me.
+This is the detailed info about me.
 
 <!-- single line comment -->

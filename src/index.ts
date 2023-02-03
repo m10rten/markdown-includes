@@ -6,6 +6,7 @@ import { exists, read, write } from "./utils/file";
 import { log } from "./utils/log";
 import { getKeyValue, hasKey } from "./utils/cli";
 import watch from "node-watch";
+import { getTabs, link } from "./utils/menu";
 
 const main = async () => {
   log("Starting compiler...");
@@ -16,10 +17,13 @@ const main = async () => {
   // for each `&|include` in content, import the file and replace it in the content.
   const root = path.split("/").slice(0, -1).join("/");
 
+  const md = getKeyValue(args, "--menu-depth") ?? "3";
+
   const parse = async (str: string, dir: string) => {
     log("Parsing (sub)content...");
     const lines: Array<string> = [];
     let includeMenu = false;
+    let menuDepth: number = parseInt(md as string);
     let removeComments = false;
 
     for await (const line of str.split("\n")) {
@@ -38,6 +42,7 @@ const main = async () => {
         lines.push(...inner);
       } else if (line.startsWith("&|menu")) {
         includeMenu = true;
+        if (line.trim().split(" ").length > 1) menuDepth = parseInt(line.split(" ")[1]);
         lines.push(line);
       } else if (line.startsWith("&|no_comments")) {
         removeComments = true;
@@ -49,31 +54,28 @@ const main = async () => {
 
     if (includeMenu) {
       log("Adding menu...");
-      const titles: Array<string> = lines
+      const menuPosition = lines.findIndex((line) => line.trim().startsWith("&|menu"));
+      if (menuPosition === -1) throw new Error("Menu position not found");
+
+      const titles = lines
         .filter(
           (line) =>
             line.split("").filter((char) => char === "#").length > 0 &&
-            line.split("").filter((char) => char === "#").length < 4,
-        ) // this will filter out all lines that don't have a `#` or have more than 3 `#`,
-        // titles with `#` after the title are not supported.
+            line.split("").filter((char) => char === "#").length <= menuDepth,
+        )
         .map((line) => line.trim());
+      // this will filter out all lines that don't have a `#` or have more than n `#`,
+      // titles with `#` after the title are not supported.
 
-      const menuPosition = lines.findIndex((line) => line.trim() === "&|menu");
       log("Creating menu...");
 
-      const item = (title: string): string =>
-        title.toLowerCase().replaceAll("#", "").replaceAll(".", "").trim().replace(/ /g, "-");
-      const link = (title: string): string => `- [${title.replaceAll("#", "").trim()}](#${item(title)})`;
-      const menu = titles
-        .map((title) =>
-          title.startsWith("###")
-            ? `    ${link(title)}`
-            : title.startsWith("##")
-            ? `  ${link(title)}`
-            : `${link(title)}`,
-        )
-        .join("\n");
+      const hashed = titles.map((title) => {
+        return { hashes: title.split(" ")[0].split(""), title: title.split(" ").slice(1).join(" ") };
+      });
+
+      const menu = hashed.map((title) => `${getTabs(title.hashes)}${link(title.title)}`).join("\n");
       lines.splice(menuPosition + 1, 0, menu);
+
       // remove the `&|menu` line.
       lines.splice(menuPosition, 1);
     }

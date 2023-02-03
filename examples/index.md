@@ -10,9 +10,9 @@
 
 ### 1. Index
 
-dit is content <!-- inline comment -->
+this is content <!-- inline comment -->
 
-#### Hiho
+#### Hi!
 
 ```js
 // this is sourcecode included for cleaner markdown.

@@ -1,5 +1,5 @@
 ## About
 
-Dit is de about me
+This is the about me.
 
 &|include detailed.md

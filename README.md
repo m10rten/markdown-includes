@@ -55,6 +55,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 - `--version` | `-v`: Show the version number.
 - `--help` | `-h`: Show the help.
 - `--watch` | `-w`: Watch the input file for changes and recompile when it changes.
+- `--menu-depth <number>`: Specify the default document depth of the menu. System default is `3`.
 
 ## Examples
 
@@ -78,6 +79,8 @@ This is the included file.
 
 ### Include menu
 
+Easily create a menu of contents with the `&|menu` tag. The menu will be created based on the headings in the document.
+
 #### Input
 
 ```markdown
@@ -89,6 +92,10 @@ This is the included file.
 
 ### Sub item
 ```
+
+##### Options
+
+- `&|menu 3`: Specify the depth of the menu in a specific document. Document default is `3`.
 
 #### Output
 
