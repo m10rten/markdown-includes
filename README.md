@@ -56,6 +56,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 - `--help` | `-h`: Show the help.
 - `--watch` | `-w`: Watch the input file for changes and recompile when it changes.
 - `--menu-depth <number>`: Specify the default document depth of the menu. System default is `3`.
+- `--no-comments`: Remove comments from the output file. System default is `false`.
 
 ## Examples
 

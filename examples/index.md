@@ -12,6 +12,8 @@
 
 this is content <!-- inline comment -->
 
+This is a [link](#hi) to the `hi` section.
+
 #### Hi!
 
 ```js
