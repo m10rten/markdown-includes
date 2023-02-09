@@ -2,6 +2,8 @@ import { read } from "./utils/file";
 import { log } from "./utils/log";
 import { getTabs, link } from "./utils/menu";
 
+export type Command = "&|include" | "&|menu" | "&|no_comments";
+
 export const parse = async (str: string, dir: string, md: string, nc: boolean) => {
   log("Parsing (sub)content...");
   const lines: Array<string> = [];
@@ -11,29 +13,51 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
   let removeComments = false;
 
   for await (const line of str.split("\n")) {
-    if (line.startsWith("&|include")) {
-      const filePath = line.slice("&|include".length).trim(); // remove the `&|include` and trim the spaces.
+    const start: Command | undefined | null = line.trim().split(" ")[0] as Command | undefined | null;
+    const args: Array<string> | null | undefined = line
+      .trim()
+      .split(" ")
+      .slice(1)
+      .map((arg) => arg.trim());
 
-      if (!filePath) throw new SyntaxError("No file path provided after `&|include`");
-      const innerDir = dir + "/" + filePath.split("/").slice(0, -1).join("/");
+    switch (start) {
+      case "&|include": {
+        if (!args) throw new SyntaxError("No file path provided after `&|include`");
+        if (args.length > 1) throw new SyntaxError("Too many arguments after `&|include`");
+        const filePath = args[0]; // remove the `&|include` and trim the spaces.
 
-      const fileName = filePath.split("/").slice(-1)[0];
-      const path = innerDir + "/" + fileName;
+        if (!filePath) throw new SyntaxError("No file path provided after `&|include`");
+        const innerDir = dir + "/" + filePath.split("/").slice(0, -1).join("/");
 
-      const fileContent = await read(path);
-      const inner = await parse(fileContent, innerDir, md, nc);
+        const fileName = filePath.split("/").slice(-1)[0];
+        const path = innerDir + "/" + fileName;
 
-      lines.push(...inner);
-    } else if (line.startsWith("&|menu")) {
-      includeMenu = true;
-      if (line.trim().split(" ").length > 1) menuDepth = parseInt(line.split(" ")[1]);
-      lines.push(line);
-    } else if (line.startsWith("&|no_comments") || noComments) {
-      removeComments = true;
-      lines.push(line);
-    } else {
-      lines.push(line);
+        const fileContent = await read(path);
+        const inner = await parse(fileContent, innerDir, md, nc);
+
+        lines.push(...inner);
+        break;
+      }
+      case "&|menu": {
+        includeMenu = true;
+        if (args.length > 0) menuDepth = parseInt(args[0]);
+        lines.push(line);
+        break;
+      }
+      case "&|no_comments": {
+        removeComments = true;
+        lines.push(line);
+        break;
+      }
+      default: {
+        lines.push(line);
+        break;
+      }
     }
+  }
+
+  if (noComments) {
+    removeComments = true;
   }
 
   if (includeMenu) {
