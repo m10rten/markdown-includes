@@ -22,6 +22,10 @@ const main = async () => {
     const root = folder ?? path.split("/").slice(0, -1).join("/");
     const files = await recursive(root, null, fileSet);
     if (!files) throw new Error("No files found");
+    for (const file of files) {
+      if (fileSet.has(file)) continue;
+      fileSet.add(file);
+    }
   } else {
     for (const path of paths) {
       fileSet.add(path);
@@ -68,9 +72,9 @@ const main = async () => {
 
     if (hasKey(process.argv, "--watch") || hasKey(process.argv, "-w")) {
       const path = process.argv.slice(2)[0];
-      const root = path.split("/").slice(0, -1).join("/");
+      const root = getKeyValue(args, "--folder") ?? path.split("/").slice(0, -1).join("/");
       await main();
-      console.info("Watching for changes...");
+      console.info(`Watching ${root} for changes...`);
       watch(root, { recursive: true }, async (event, name: string) => {
         console.info("File changed, recompiling...", event, name);
         await main();
