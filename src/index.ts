@@ -1,66 +1,44 @@
 #! /usr/bin/env ts-node-script
+/* eslint-disable @typescript-eslint/no-var-requires */
 /* eslint-disable no-console */
 
-import { mkdir } from "fs/promises";
-import { exists, read, write } from "./utils/file";
-import { log } from "./utils/log";
-import { getKeyValue, hasKey } from "./utils/cli";
 import watch from "node-watch";
-import { parse } from "./parse";
+import { compile } from "./compile";
+import { getKeyValue, hasKey } from "./utils/cli";
+import { recursive } from "./utils/file";
+import { log } from "./utils/log";
 
 const main = async () => {
   log("Starting compiler...");
   const args = process.argv.slice(2);
   const path = args[0];
+  const paths = path.split(",");
+  const fileSet = new Set<string>();
+  if (!paths || paths.length < 1) throw new Error("No file path provided");
 
-  // validate the path
-  if (!path) throw new Error("No file path provided");
-  if (!path.endsWith(".md")) throw new Error("File must be a markdown file (.md)");
   if (path.includes("\\")) throw new Error("File path must be in unix format (use / instead of \\)");
-  if (!(await exists(path))) throw new Error("File does not exist");
-
-  const content = await read(path);
-
-  // for each `&|include` in content, import the file and replace it in the content.
-  const root = path.split("/").slice(0, -1).join("/");
-
-  const md: string = getKeyValue(args, "--menu-depth") ?? "3";
-  const nc: boolean = hasKey(args, "--no-comments") ?? false;
-  const finalFile = await parse(content, root, md, nc);
-
-  log("Removing empty lines...");
-  for (let i = 0; i < finalFile.length; i++) {
-    // remove empty lines
-    if (!finalFile[i] || !finalFile[i + 1]) continue;
-    if (finalFile[i].trim() === "" && finalFile[i + 1].trim() === "") {
-      finalFile.splice(i, 1);
-      i--;
+  if (path.includes("*") || hasKey(args, "--folder")) {
+    const folder = getKeyValue(args, "--folder") ?? null;
+    const root = folder ?? path.split("/").slice(0, -1).join("/");
+    const files = await recursive(root, null, fileSet);
+    if (!files) throw new Error("No files found");
+  } else {
+    for (const path of paths) {
+      fileSet.add(path);
     }
   }
 
-  log("Cleaning up...");
-  const cleaned = finalFile.join("\n").trim() + "\n";
-
-  const out: string | null = getKeyValue(args, "--out") ?? null;
-  log("Creating output file...");
-  const outPath: string = out ?? `out/${path}`;
-  let stacked = "";
-  log(`Creating directories for ${outPath}...`);
-
-  for (const dir of outPath.split("/").slice(0, -1)) {
-    stacked += dir + "/";
-    if (!(await exists(stacked))) await mkdir(stacked);
+  for (const file of fileSet) {
+    log(`Compiling ${file}...`);
+    await compile(file, args);
   }
 
-  await write(outPath, cleaned);
-  console.info(`Output at: ${outPath}`);
   return;
 };
 
 (async () => {
   try {
     if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       console.info(require("../package.json").version);
       process.exit(0);
     }
