@@ -49,6 +49,8 @@ const main = async () => {
     if (args.length < 1 || !args[0] || hasKey(process.argv, "--help") || hasKey(process.argv, "-h")) {
       console.info(`
     Usage: mdi <file> [options]
+      <file>         The file to compile.
+        Can be a single file or a wildcard (e.g. \`examples/*\`).
     Options:
       --out <file>    Output file path.
       --watch, -w     Watch for changes.
@@ -57,6 +59,7 @@ const main = async () => {
       --version, -v   Show version.
       --menu-depth    Set the depth of the menu. (default: 3)
       --no-comments   Remove comments from the output.
+      --folder <dir>  Set the folder to watch for changes.
     `);
       console.log(`To get started, run \`mdi <file>\`.`);
 

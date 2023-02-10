@@ -1,5 +1,5 @@
 import { existsSync } from "fs";
-import { appendFile, readFile, readdir, writeFile } from "fs/promises";
+import { appendFile, lstat, readFile, readdir, writeFile } from "fs/promises";
 
 export const read = async (path: string): Promise<string> => {
   const str = await readFile(path, "utf-8");
@@ -46,7 +46,7 @@ export const recursive = async (root: string, path: string | null | undefined, f
 
   if (fileSet.has(absolute)) throw new Error("This file has already been parsed.");
   if (path?.endsWith(".md")) fileSet.add(absolute);
-  else if (!path?.includes(".")) {
+  else if ((await lstat(absolute)).isDirectory()) {
     // is a directory
 
     const files = await readdir(absolute);
