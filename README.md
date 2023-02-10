@@ -52,11 +52,12 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
    ```
 
    **Multiple files**
-   When you want to compile multiple files, use the `*` as the `<input file>`, like this: `mdi ./*`.
+   When you want to compile multiple files, use the `*` as the `<input file>`, like this: `mdi ./*`. <br>
+   It will compile all files in the current directory specified: `mdi examples/*` will compile all inside examples. <br>
 
-   > ⚠️ When using the `*` as the `<input file>`, you must specify the `--folder` option, like this: `mdi * --folder <dir name>`. <br>
+   > ⚠️ When using just the `*` as the `<input file>`, you must specify the `--folder` option, like this: `mdi * --folder <dir name>`. At this point `*` has no usage. <br>
    > When using the `*`, make sure to use it as: `./*`. <br>
-   > ❗ The `*` will only work on the build script, not on the watch script.
+   > ❗The `*` will only work on the build script, not on the watch script.
 
 ### Options
 
