@@ -15,6 +15,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 - ⌚ Compile multiple Markdown files into 1 with the `&|include` tag.
 - 🗃️ Create a menu of contents with the `&|menu` tag.
 - 🧹 Remove comments from output file with the `&|no_comments` tag.
+- 📝 Create a table based on JSON with the `&|table` tag.
 
 ## Usage
 
@@ -56,8 +57,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
    It will compile all files in the current directory specified: `mdi examples/*` will compile all inside examples. <br>
 
    > ⚠️ When using just the `*` as the `<input file>`, you must specify the `--folder` option, like this: `mdi * --folder <dir name>`. At this point `*` has no usage. <br>
-   > When using the `*`, make sure to use it as: `./*`. <br>
-   > ❗The `*` will only work on the build script, not on the watch script.
+   > When using the `*`, make sure to use it as: `./*`.
 
 ### Options
 
@@ -66,7 +66,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 - `--version` | `-v`: Show the version number.
 - `--help` | `-h`: Show the help.
 - `--watch` | `-w`: Watch the input file for changes and recompile when it changes.
-- `--menu-depth <number>`: Specify the default document depth of the menu. System default is `3`.
+- `--menu-depth <number>`: Specify the default system depth of the menu. System default is `3`.
 - `--no-comments`: Remove comments from the output file. System default is `false`.
 - `--folder <path>`: Specify the folder where the input file is located. System default is the current working directory.
 
@@ -92,7 +92,7 @@ This is the included file.
 
 ### Include menu
 
-Easily create a menu of contents with the `&|menu` tag. The menu will be created based on the headings in the document.
+Easily create a menu of contents with the `&|menu` tag. The menu will be created based on the headings in the document, at the location of the tag.
 
 #### Input
 
