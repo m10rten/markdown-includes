@@ -1,8 +1,9 @@
+import { table } from "./table";
 import { read } from "./utils/file";
 import { log } from "./utils/log";
 import { getTabs, link } from "./utils/menu";
 
-export type Command = "&|include" | "&|menu" | "&|no_comments";
+export type Command = "&|include" | "&|menu" | "&|no_comments" | "&|table";
 
 export const parse = async (str: string, dir: string, md: string, nc: boolean) => {
   log("Parsing (sub)content...");
@@ -47,6 +48,21 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
       case "&|no_comments": {
         removeComments = true;
         lines.push(line);
+        break;
+      }
+      case "&|table": {
+        if (!args) throw new SyntaxError("No file path provided after `&|table`");
+        const file = args[0];
+        log(`Adding table ${file}...`);
+        lines.push(line);
+        const tablePosition = lines.findIndex((line) => line.trim().startsWith("&|table"));
+
+        const fileStr = await read(`${dir}/${file}`);
+        const tableContent = await table(fileStr);
+        lines.push(...tableContent);
+
+        // remove the `&|table` line.
+        lines.splice(tablePosition, 1);
         break;
       }
       default: {
