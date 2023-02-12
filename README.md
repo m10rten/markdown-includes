@@ -167,8 +167,6 @@ For example, if you have a JSON file with the following data:
 ]
 ```
 
-Make sure you have this JSON file ordered by the columns, since it is now based on indexes and not keys. This will be fixed in the future.
-
 #### Input
 
 ```markdown
