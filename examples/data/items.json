@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "John Doe",
-    "description": "John Doe is a fictional character created by Edgar Allan Poe. He is the central character of the short story \"The Tell-Tale Heart\" (1843).",
+    "description": "John Doe is a fictional character.",
     "age": 35
   },
   {
@@ -14,19 +14,19 @@
   {
     "id": 3,
     "name": "John Smith",
-    "description": "John Smith is a fictional character created by Edgar Allan Poe. He is the central character of the short story \"The Tell-Tale Heart\" (1843).",
+    "description": "John Smith is a fictional character.",
     "age": 45
   },
   {
+    "description": "Jane Smith is a fictional character.",
     "id": 4,
     "name": "Jane Smith",
-    "description": "Jane Smith is a fictional character.",
     "age": 42
   },
   {
     "id": 5,
     "name": "John Doe",
-    "description": "John Doe is a fictional character created by Edgar Allan Poe. He is the central character of the short story \"The Tell-Tale Heart\" (1843).",
+    "description": "John Doe is a fictional character.",
     "age": 25
   },
   {
@@ -36,9 +36,9 @@
     "age": 32
   },
   {
-    "id": 7,
     "name": "John Smith",
-    "description": "John Smith is a fictional character created by Edgar Allan Poe. He is the central character of the short story \"The Tell-Tale Heart\" (1843).",
+    "id": 7,
+    "description": "John Smith is a fictional character.",
     "age": 45
   },
   {
@@ -50,13 +50,11 @@
   {
     "id": 9,
     "name": "John Doe",
-    "description": "John Doe is a fictional character created by Edgar Allan Poe. He is the central character of the short story \"The Tell-Tale Heart\" (1843).",
     "age": 78
   },
   {
     "id": 10,
     "name": "Jane Doe",
-    "description": "Jane Doe is a fictional character.",
-    "age": 92
+    "description": "Jane Doe is a fictional character."
   }
 ]

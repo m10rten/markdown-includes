@@ -8,13 +8,14 @@ const line = (arr: Array<any>) =>
 export const table = async (str: string) => {
   log("Parsing table...");
   const parsed = JSON.parse(str);
+  const keyOrder = Object.keys(parsed[0]);
 
   const out = [`| ${Object.keys(parsed[0]).join(" | ")} |`];
 
   out.push(line(parsed));
 
   for await (const row of parsed) {
-    const values = Object.values(row);
+    const values = keyOrder.map((key) => row[key]);
     const line = `| ${values.join(" | ")} |`;
     out.push(line);
   }
