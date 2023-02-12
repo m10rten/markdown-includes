@@ -148,6 +148,43 @@ Lorum ipsum
 Lorum ipsum
 ```
 
+### Table
+
+Use the `&|table` tag to include a table from a JSON file.
+
+For example, if you have a JSON file with the following data:
+
+```json
+[
+  {
+    "Name": "John",
+    "Age": 20
+  },
+  {
+    "Name": "Jane",
+    "Age": 21
+  }
+]
+```
+
+Make sure you have this JSON file ordered by the columns, since it is now based on indexes and not keys. This will be fixed in the future.
+
+#### Input
+
+```markdown
+&|table data.json
+```
+
+#### Output
+
+```markdown
+| Name | Age |
+| ---- | --- |
+| John | 20  |
+| Jane | 21  |
+| ...  | ... |
+```
+
 ## License
 
 MIT
