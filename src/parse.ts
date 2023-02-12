@@ -111,6 +111,6 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
     const noCommand = merged.replaceAll(/&\|no_comments/gm, "");
     return noCommand.split("\n");
   }
-  log(lines);
+
   return lines;
 };
