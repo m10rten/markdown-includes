@@ -59,13 +59,10 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
 
         const fileStr = await read(`${dir}/${file}`);
         const tableContent = await table(fileStr);
-        log(`Table ${file} added!`);
         lines.push(...tableContent);
-        log(lines);
 
         // remove the `&|table` line.
         lines.splice(tablePosition, 1);
-
         break;
       }
       default: {
