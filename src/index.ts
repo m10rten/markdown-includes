@@ -22,13 +22,18 @@ const main = async () => {
   if (path.includes("*") || hasKey(args, "--folder")) {
     const folder = getKeyValue(args, "--folder") ?? null;
     const root = folder ?? path.split("/").slice(0, -1).join("/");
-    const files = await recursive(root, null, fileSet);
 
-    if (!files) throw new Error("No files found");
+    // get all files in the folder and subfolders
+    const res = await recursive(root, null, fileSet);
+    if (!res) throw new Error("No files found");
 
-    for (const file of files) {
-      if (fileSet.has(file)) continue;
-      fileSet.add(file);
+    const pathSet = new Set<string>(paths.map((path) => `${root}/${path.trim()}`));
+    if (!path.includes("*")) {
+      // only add the files that are give in the paths
+      for (const file of fileSet) {
+        if (pathSet.has(`${file}`)) continue;
+        fileSet.delete(file);
+      }
     }
   } else {
     for (const path of paths) {

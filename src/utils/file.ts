@@ -45,7 +45,7 @@ export const recursive = async (root: string, path: string | null | undefined, f
   const absolute = `${root}${path ? `/${path}` : ""}`;
 
   if (fileSet.has(absolute)) throw new Error("This file has already been parsed.");
-  if (path?.endsWith(".md")) fileSet.add(absolute);
+  if (path?.endsWith(".md") && (await lstat(absolute)).isFile()) fileSet.add(absolute);
   else if ((await lstat(absolute)).isDirectory()) {
     // is a directory
 
