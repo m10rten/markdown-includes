@@ -1,5 +1,7 @@
 import { existsSync } from "fs";
-import { appendFile, lstat, readFile, readdir, writeFile } from "fs/promises";
+import { appendFile, readFile, writeFile } from "fs/promises";
+import { glob } from "glob";
+import { slash } from "./clean";
 
 export const read = async (path: string): Promise<string> => {
   const str = await readFile(path, "utf-8");
@@ -41,27 +43,12 @@ export const toJson = (string: string) => {
   return JSON.parse(string);
 };
 
-export const recursive = async (root: string, path: string | null | undefined, fileSet: Set<string>) => {
-  const absolute = `${root}${path ? `/${path}` : ""}`;
-
-  if (fileSet.has(absolute)) throw new Error("This file has already been parsed.");
-  if (path?.endsWith(".md") && (await lstat(absolute)).isFile()) fileSet.add(absolute);
-  else if ((await lstat(absolute)).isDirectory()) {
-    // is a directory
-
-    const files = await readdir(absolute);
-
-    for (const file of files) {
-      const resSet = await recursive(absolute, file, fileSet);
-
-      if (!resSet) continue;
-
-      for (const res of resSet) {
-        fileSet.add(res);
-      }
-    }
-  }
-
-  // return the file set
-  return fileSet;
+export const getFiles = async (root: string, path: string): Promise<Set<string>> => {
+  return new Promise<Set<string>>((resolve) => {
+    return glob(slash(path.includes(root) ? path : `${root}/${path}`), { root }, (err, files) => {
+      if (err) throw err;
+      const set = new Set(files);
+      resolve(set);
+    });
+  });
 };

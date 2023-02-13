@@ -4,11 +4,13 @@
 
 import watch from "node-watch";
 import { compile } from "./compile";
+import { slash } from "./utils/clean";
 import { getKeyValue, hasKey } from "./utils/cli";
-import { recursive } from "./utils/file";
+import { getFiles } from "./utils/file";
 import { log } from "./utils/log";
 
 const main = async () => {
+  console.time("Compile time");
   log("Starting compiler...");
 
   const args = process.argv.slice(2);
@@ -18,26 +20,14 @@ const main = async () => {
 
   if (!paths || paths.length < 1) throw new Error("No file path provided");
 
-  if (path.includes("\\")) throw new Error("File path must be in unix format (use / instead of \\)");
-  if (path.includes("*") || hasKey(args, "--folder")) {
-    const folder = getKeyValue(args, "--folder") ?? null;
-    const root = folder ?? path.split("/").slice(0, -1).join("/");
+  const folder: string | null = slash(getKeyValue(args, "--folder") as string) ?? null;
+  for (const path of paths) {
+    const root: string = folder ?? slash(path).split("/").slice(0, -1).join("/");
+    const cleanedPath = slash(path);
+    const files = await getFiles(root, cleanedPath);
 
-    // get all files in the folder and subfolders
-    const res = await recursive(root, null, fileSet);
-    if (!res) throw new Error("No files found");
-
-    const pathSet = new Set<string>(paths.map((path) => `${root}/${path.trim()}`));
-    if (!path.includes("*")) {
-      // only add the files that are give in the paths
-      for (const file of fileSet) {
-        if (pathSet.has(`${file}`)) continue;
-        fileSet.delete(file);
-      }
-    }
-  } else {
-    for (const path of paths) {
-      fileSet.add(path);
+    for (const file of files) {
+      fileSet.add(file);
     }
   }
 
@@ -46,6 +36,7 @@ const main = async () => {
     await compile(file, args);
   }
 
+  console.timeEnd("Compile time");
   return;
 };
 
@@ -80,22 +71,39 @@ const main = async () => {
     `);
       console.log(`To get started, run \`mdi <file>\`.`);
 
-      process.exit(0);
+      return process.exit(0);
     }
+
+    await main();
+    log("Done compiling!");
 
     if (hasKey(process.argv, "--watch") || hasKey(process.argv, "-w")) {
       const path = process.argv.slice(2)[0];
-      const root = getKeyValue(args, "--folder") ?? path.split("/").slice(0, -1).join("/");
-      await main();
-      console.info(`Watching ${root} for changes...`);
-      watch(root, { recursive: true }, async (event, name: string) => {
-        console.info("File changed, recompiling...", event, name);
-        await main();
-      });
-    } else {
-      await main();
-      log("Done!");
+      const paths = path.split(",");
+
+      const root = slash(getKeyValue(args, "--folder") ?? slash(path).split("/").slice(0, -1).join("/"));
+
+      for (const path of paths) {
+        const cleanedPath = slash(path);
+        if (cleanedPath.includes("*")) {
+          const files = await getFiles(root, cleanedPath);
+          for (const file of files) {
+            console.info(`Watching ${file} for changes...`);
+            watch(file, async () => {
+              console.info("File changed, recompiling...", file);
+              await main();
+            });
+          }
+        } else {
+          console.info(`Watching ${cleanedPath} for changes...`);
+          watch(cleanedPath, async () => {
+            console.info("File changed, recompiling...", cleanedPath);
+            await main();
+          });
+        }
+      }
     }
+    return;
   } catch (error) {
     console.error(error);
     process.exit(1);

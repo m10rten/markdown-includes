@@ -1,6 +1,6 @@
 {
   "name": "markdown-includes",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "description": "🎯 Compile multiple Markdown files into 1 using a simple script.",
   "main": "dist/index.js",
   "scripts": {
@@ -42,6 +42,7 @@
   },
   "homepage": "https://github.com/m10rten/markdown-includes#readme",
   "devDependencies": {
+    "@types/glob": "^8.0.1",
     "@types/node": "^18.13.0",
     "@typescript-eslint/eslint-plugin": "^5.51.0",
     "@typescript-eslint/parser": "^5.51.0",
@@ -55,6 +56,7 @@
     "npm": ">=8.0.0"
   },
   "dependencies": {
+    "glob": "^8.1.0",
     "node-watch": "^0.7.3"
   }
 }

@@ -54,10 +54,9 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 
    **Multiple files**
    When you want to compile multiple files, use the `*` as the `<input file>`, like this: `mdi ./*`. <br>
-   It will compile all files in the current directory specified: `mdi examples/*` will compile all inside examples. <br>
+   It will compile all files in the current directory specified: `mdi examples/*` will compile all inside examples.
 
-   > ⚠️ When using just the `*` as the `<input file>`, you must specify the `--folder` option, like this: `mdi * --folder <dir name>`. At this point `*` has no usage. <br>
-   > When using the `*`, make sure to use it as: `./*`.
+   > ⚠️ The patterns are from `node:glob` on npm.
 
 ### Options
 
@@ -68,7 +67,7 @@ Compile multiple Markdown files into 1 using a simple script, use it to create a
 - `--watch` | `-w`: Watch the input file for changes and recompile when it changes.
 - `--menu-depth <number>`: Specify the default system depth of the menu. System default is `3`.
 - `--no-comments`: Remove comments from the output file. System default is `false`.
-- `--folder <path>`: Specify the folder where the input file is located. System default is the current working directory.
+- `--folder <path>`: Specify the root folder. System default is the current working directory.
 
 ## Examples
 
