@@ -7,7 +7,7 @@
 [![GitHub Repo stars](https://img.shields.io/github/stars/m10rten/markdown-includes?color=E9E9E9&logo=Github&style=for-the-badge)](https://www.github.com/m10rten/markdown-includes)&nbsp;
 [![GitHub issues](https://img.shields.io/github/issues-raw/m10rten/markdown-includes?label=issues&style=for-the-badge)](https://www.github.com/m10rten/markdown-includes/issues)
 
-Compile multiple Markdown files into 1 using a simple script, use it to create a menu, remove comments, etc.
+Compile multiple Markdown files into 1, easily create a menu, remove comments and more with easy to use tags.
 
 ## Features
 

@@ -1,7 +1,7 @@
 {
   "name": "markdown-includes",
-  "version": "0.8.3",
-  "description": "🎯 Compile multiple Markdown files into 1 using a simple script.",
+  "version": "0.8.4",
+  "description": "🎯 A simple markdown compiler that allows you to include multiple functions in your markdown files.",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
@@ -33,7 +33,13 @@
     "markdown-includes",
     "comments",
     "menu",
-    "generator"
+    "generator",
+    "include",
+    "includes",
+    "include-files",
+    "include-files-in-markdown",
+    "table",
+    "table-of-contents"
   ],
   "author": "m10rten",
   "license": "MIT",
