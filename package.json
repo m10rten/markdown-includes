@@ -1,6 +1,6 @@
 {
   "name": "markdown-includes",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "🎯 A simple markdown compiler that allows you to include multiple functions in your markdown files.",
   "main": "dist/index.js",
   "scripts": {

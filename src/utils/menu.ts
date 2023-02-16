@@ -5,5 +5,6 @@ export const getTabs = (hashtags: Array<string>): string => {
 };
 
 export const item = (title: string): string =>
-  title.toLowerCase().replaceAll("#", "").replaceAll(".", "").trim().replace(/ /g, "-");
+  title.toLowerCase().replaceAll("#", "").replaceAll(".", "").trim().replace(/ /g, "-").replaceAll("?", "");
+
 export const link = (title: string): string => `- [${title.replaceAll("#", "").trim()}](#${item(title)})`;
