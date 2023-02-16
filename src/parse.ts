@@ -52,13 +52,14 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
       }
       case "&|table": {
         if (!args) throw new SyntaxError("No file path provided after `&|table`");
-        const file = args[0];
+        const file: string = args[0];
+        const selected: Array<string> = args.slice(1);
         log(`Adding table ${file}...`);
         lines.push(line);
-        const tablePosition = lines.findIndex((line) => line.trim().startsWith("&|table"));
+        const tablePosition: number = lines.findIndex((line) => line.trim().startsWith("&|table"));
 
-        const fileStr = await read(`${dir}/${file}`);
-        const tableContent = await table(fileStr);
+        const fileStr: string = await read(`${dir}/${file}`);
+        const tableContent: Array<string> = await table(fileStr, selected?.length > 0 ? selected : undefined);
         lines.push(...tableContent);
 
         // remove the `&|table` line.

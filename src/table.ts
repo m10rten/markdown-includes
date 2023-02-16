@@ -1,21 +1,24 @@
 import { log } from "./utils/log";
 
-const line = (arr: Array<any>) =>
-  `| ${Object.keys(arr[0])
-    .map(() => "---")
-    .join(" | ")} |`;
+const line = (arr: Array<any>) => `| ${arr.map(() => "---").join(" | ")} |`;
+const isSelected = (key: string, selected?: Array<string>) => (selected ? selected.includes(key) : true);
 
-export const table = async (str: string) => {
+export const table = async (str: string, selected?: Array<string>) => {
   log("Parsing table...");
-  const parsed = JSON.parse(str);
-  const keyOrder = Object.keys(parsed[0]);
+  const parsed: Array<any> = JSON.parse(str);
+  const keyOrder = Object.keys(parsed[0]).filter((key) => isSelected(key, selected));
 
-  const out = [`| ${Object.keys(parsed[0]).join(" | ")} |`];
+  const out = [
+    `| ${Object.keys(parsed[0])
+      .filter((key) => isSelected(key, selected))
+      .join(" | ")} |`,
+  ];
 
-  out.push(line(parsed));
+  const cols = selected && selected.length > 0 ? selected : Object.keys(parsed[0]);
+  out.push(line(cols));
 
   for await (const row of parsed) {
-    const values = keyOrder.map((key) => row[key]);
+    const values = keyOrder.filter((key) => isSelected(key, selected)).map((key) => row[key]);
     const line = `| ${values.join(" | ")} |`;
     out.push(line);
   }

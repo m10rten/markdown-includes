@@ -166,6 +166,11 @@ For example, if you have a JSON file with the following data:
 ]
 ```
 
+#### Options
+
+- `&|table <path> <keys?>`: Specify the keys to include in the table. If no keys are specified, all keys will be included.
+  > ⚠️ The keys are case sensitive.
+
 #### Input
 
 ```markdown
