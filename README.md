@@ -67,7 +67,7 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
 - `--watch` | `-w`: Watch the input file for changes and recompile when it changes.
 - `--menu-depth <number>`: Specify the default system depth of the menu. System default is `3`.
 - `--no-comments`: Remove comments from the output file. System default is `false`.
-- `--folder <path>`: Specify the root folder. System default is the current working directory.
+- `--root <path>`: Specify the root folder. System default is the current working directory.
 
 ## Examples
 

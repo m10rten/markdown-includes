@@ -12,6 +12,7 @@ export const compile = async (path: string, args: Array<string>) => {
   if (path.includes("\\")) throw new Error("File path must be in unix format (use / instead of \\)");
   if (!(await exists(path))) throw new Error("File does not exist");
 
+  log("Reading file...");
   const content = await read(path);
 
   // for each `&|include` in content, import the file and replace it in the content.

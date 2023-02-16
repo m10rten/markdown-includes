@@ -20,11 +20,11 @@ const main = async () => {
 
   if (!paths || paths.length < 1) throw new Error("No file path provided");
 
-  const folder: string | null = slash(getKeyValue(args, "--folder") as string) ?? null;
+  const root: string | null = slash(getKeyValue(args, "--root") as string) ?? null;
   for (const path of paths) {
-    const root: string = folder ?? slash(path).split("/").slice(0, -1).join("/");
+    const folder: string = root ?? slash(path).split("/").slice(0, -1).join("/");
     const cleanedPath = slash(path);
-    const files = await getFiles(root, cleanedPath);
+    const files = await getFiles(folder, cleanedPath);
 
     for (const file of files) {
       fileSet.add(file);

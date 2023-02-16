@@ -44,10 +44,11 @@ export const toJson = (string: string) => {
 };
 
 export const getFiles = async (root: string, path: string): Promise<Set<string>> => {
-  return new Promise<Set<string>>((resolve) => {
+  return new Promise<Set<string>>((resolve, reject) => {
     return glob(slash(path.includes(root) ? path : `${root}/${path}`), { root }, (err, files) => {
-      if (err) throw err;
+      if (err) reject(err);
       const set = new Set(files);
+      if (set.size === 0) reject(`No files found at ${path}`);
       resolve(set);
     });
   });
