@@ -1,8 +1,15 @@
 {
   "name": "markdown-includes",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "description": "🎯 A simple markdown compiler that allows you to include multiple functions in your markdown files.",
   "main": "dist/index.js",
+  "publisher": "m10rten",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
+  },
+  "private": false,
   "scripts": {
     "dev": "nodemon src/index.ts",
     "build": "tsc",
@@ -31,6 +38,9 @@
     "script",
     "cli",
     "markdown-includes",
+    "markdown-include",
+    "include",
+    "includes",
     "comments",
     "menu",
     "generator",
