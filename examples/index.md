@@ -4,7 +4,9 @@
 
 &|menu
 
-&|include chapters/about.md
+&|include custom.i.md
+
+&|include `chapters/**/*`
 
 ## Examples
 

@@ -1,12 +1,14 @@
+import { glob } from "glob";
 import { table } from "./table";
-import { read } from "./utils/file";
+import { slash } from "./utils/clean";
+import { getFiles, read } from "./utils/file";
 import { log } from "./utils/log";
 import { getTabs, link } from "./utils/menu";
 
 export type Command = "&|include" | "&|menu" | "&|no_comments" | "&|table";
 
 export const parse = async (str: string, dir: string, md: string, nc: boolean) => {
-  log("Parsing (sub)content...");
+  log(`Parsing ${dir} ...`);
   const lines: Array<string> = [];
   let includeMenu = false;
   let menuDepth: number = parseInt(md as string);
@@ -25,18 +27,23 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
       case "&|include": {
         if (!args) throw new SyntaxError("No file path provided after `&|include`");
         if (args.length > 1) throw new SyntaxError("Too many arguments after `&|include`");
-        const filePath = args[0]; // remove the `&|include` and trim the spaces.
+        const filePath = args[0].replaceAll("`", "").replaceAll("'", "").replaceAll('"', ""); // remove the `&|include` and trim the spaces.
 
         if (!filePath) throw new SyntaxError("No file path provided after `&|include`");
-        const innerDir = dir + "/" + filePath.split("/").slice(0, -1).join("/");
+        const innerDir = slash(dir + "/" + filePath.split("/").slice(0, -1).join("/").replaceAll("*", ""));
 
         const fileName = filePath.split("/").slice(-1)[0];
-        const path = innerDir + "/" + fileName;
+        const pathArg = slash(innerDir + "/" + fileName);
 
-        const fileContent = await read(path);
-        const inner = await parse(fileContent, innerDir, md, nc);
+        const files = glob.hasMagic(pathArg) ? await getFiles(innerDir, pathArg) : new Set([pathArg]);
 
-        lines.push(...inner);
+        for (const file of files) {
+          log(`Adding ${file} ...`);
+          const fileContent = await read(file);
+          const inner = await parse(fileContent, innerDir, md, nc);
+          lines.push(...inner);
+        }
+
         break;
       }
       case "&|menu": {

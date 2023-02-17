@@ -32,7 +32,7 @@ const main = async () => {
   }
 
   for (const file of fileSet) {
-    log(`Compiling ${file}...`);
+    log(`Compiling ${file} ...`);
     await compile(file, args);
   }
 
