@@ -77,7 +77,6 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
 
 - `&|include include.md`: Include a file.
 - `` &|include `chapters/**/*`  ``: Include all files in the `chapters` folder and all subfolders, due to markdown syntax, you need to use backticks to wrap the pattern.
-- `&|include "file with spaces.md"`: Include a file with spaces in the name, or if you prefer quotes.
 
 #### Input
 
