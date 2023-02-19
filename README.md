@@ -72,7 +72,7 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
 - `--extensions <list>` Set the extensions to include. (default: `.md,.mdx`)
 - `--ignore <list>`: Set the folders to ignore. (default: `node_modules,.git`)
 
-## Examples
+## Tag Examples
 
 ### Include file
 
@@ -194,6 +194,47 @@ For example, if you have a JSON file with the following data:
 | Jane | 21  |
 | ...  | ... |
 ```
+
+## API Usage
+
+### Configuration
+
+When you want to use the API, you can use the default exported class to create a new compiler instance.
+
+```js
+const Mdi = require("markdown-includes");
+
+const config = {
+  debug: true, // log actions to the console
+  output: "./out", // output directory
+  menuDepth: 3, // default menu depth
+  noComments: false, // remove comments from output
+  root: "./", // root directory
+  path: "path-to-file.md", // path to file
+  extensions: [".md", ".mdx"], // file-extensions to include
+  ignore: ["node_modules", ".git"], // folders to ignore
+};
+
+const compiler = new Mdi(config);
+
+// will use the path from the config, or path specified as an argument.
+compiler.compile();
+```
+
+### Methods
+
+- `compile(path?: string) => Promise<void>`: Compile the file.
+- `watch(path?: string)`: Watch the file for changes and recompile when it changes. Uses `node-watch` on npm.
+- `table(content: string, columns?: string[], debug?: boolean) => Promise<string[]>`)
+  - `content`: The content of the file.
+  - `columns`: The columns to include in the table.
+  - `debug`: Whether to log the actions to the console.
+- `parse(content: string, dir: string, menuDepth: number, noComments: boolean, debug?: boolean) => Promise<string>`: Parse the content of the file.
+  - `content`: The content of the file.
+  - `dir`: The directory of the file. Used to resolve recursive includes.
+  - `menuDepth`: The depth of the menu.
+  - `noComments`: Whether to remove comments from the output.
+  - `debug`: Whether to log the actions to the console.
 
 ## License
 

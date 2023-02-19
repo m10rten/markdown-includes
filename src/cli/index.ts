@@ -9,6 +9,10 @@ import { getKeyValue, hasKey } from "../utils/cli";
 import { exists, getFiles, read } from "../utils/file";
 import MarkdownIncludes, { Config } from "../index";
 
+if (require.main !== module) {
+  throw new Error("This file should not be imported");
+}
+
 (async () => {
   try {
     console.info(`Thanks for using markdown-includes!💗`);
@@ -25,7 +29,7 @@ import MarkdownIncludes, { Config } from "../index";
     Usage: mdi <file> [options]
       <file>         The file to compile.
         Can be a single file, multiple files seperated by comma or a wildcard (e.g. \`examples/*\`).
-        If a wildcard is used, the \`--folder\` option can be used to set the root folder.
+        If a wildcard is used, the \`--root\` option can be used to set the root folder.
         When using a wildcard, it is required to use a directory: \`examples/*\` or \`./*\`.
 
     Options:
