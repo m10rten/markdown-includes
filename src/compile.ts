@@ -13,9 +13,13 @@ export const compile = async ({ path, extensions, menuDepth, ignore, noComments,
 	if (!path) throw new Error("No file path provided");
 	if (!path.endsWith(".md") || extensions?.includes(path.split(".").slice(-1)[0]))
 		return log(`Skipping ${path} (not a markdown file or included in extension list)`);
-	if (ignore?.includes(path.split("/").slice(-1)[0])) return log(`Skipping ${path} (ignored)`);
 	if (path.includes("\\")) throw new Error("File path must be in unix format (use / instead of \\)");
 	if (!(await exists(path))) throw new Error("File does not exist");
+
+	for (const dir of path.split("/").slice(0, -1)) {
+		log(`Checking if ${dir} is ignored...`);
+		if (ignore?.includes(dir)) return log(`Skipping ${path} (ignored) \n`);
+	}
 
 	log(`Reading file ${path}...`);
 	const stat = await lstat(path);

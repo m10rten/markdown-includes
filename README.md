@@ -20,6 +20,7 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
 ## Table of contents
 
 - [Usage](#usage)
+  - [Hierarchy](#hierarchy-of-options)
   - [Options](#options)
 - [Tag Examples](#tag-examples)
   - [Include file](#include-file)
@@ -84,6 +85,11 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
    It will compile all files in the current directory specified: `mdi examples/*` will compile all inside examples.
 
    > ⚠️ The patterns are from [`glob`](https://npmjs.com/package/glob) on npm.
+
+### Hierarchy of options
+
+The options are set with the following order of priority: <br>
+_CLI arguments > Config file > Tag options > System default_
 
 ### Options
 

@@ -5,7 +5,7 @@
 import watch from "node-watch";
 import { log } from "../utils/log";
 import { slash } from "../utils/clean";
-import { getKeyValue, hasKey } from "../utils/cli";
+import { getKeyValue, getValueByIndex, hasKey } from "../utils/cli";
 import { exists, getFiles, read } from "../utils/file";
 import MarkdownIncludes, { Config } from "../index";
 
@@ -68,21 +68,24 @@ if (require.main !== module) {
 
 		const markdownIncludes = new MarkdownIncludes({
 			...config,
-			menuDepth: config?.menuDepth ?? parseInt(getKeyValue(args, "--menu-depth") as string),
-			noComments: config?.noComments ?? hasKey(args, "--no-comments"),
-			debug: config?.debug ?? hasKey(args, "--debug"),
+			menuDepth: parseInt(getKeyValue(args, "--menu-depth") as string) ?? config?.menuDepth ?? undefined,
+			noComments: (hasKey(args, "--no-comments") || config?.noComments) ?? undefined,
+			debug: (hasKey(args, "--debug") || config?.debug) ?? undefined,
 			extensions:
-				config?.extensions ??
 				getKeyValue(args, "--extensions")
 					?.split(",")
-					.map((ext) => ext.trim()),
+					.map((ext) => ext.trim()) ??
+				config?.extensions ??
+				undefined,
 			ignore:
-				config?.ignore ??
 				getKeyValue(args, "--ignore")
 					?.split(",")
-					.map((ext) => ext.trim()),
-			output: config?.output ?? (getKeyValue(args, "--out") as string | undefined),
-			root: config?.root ?? (getKeyValue(args, "--root") as string | undefined),
+					.map((dir) => dir.trim()) ??
+				config?.ignore ??
+				undefined,
+			output: getKeyValue(args, "--out") ?? config?.output ?? undefined,
+			root: getKeyValue(args, "--root") ?? config?.root ?? undefined,
+			path: getValueByIndex(args, 0) ?? config?.path ?? undefined,
 		});
 
 		await markdownIncludes.compile(args[0]);
