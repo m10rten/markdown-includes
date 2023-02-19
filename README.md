@@ -17,6 +17,33 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
 - 🧹 Remove comments from output file with the `&|no_comments` tag.
 - 📝 Create a table based on JSON with the `&|table` tag.
 
+## Table of contents
+
+- [Usage](#usage)
+  - [Options](#options)
+- [Tag Examples](#tag-examples)
+  - [Include file](#include-file)
+    - [Options](#options-1)
+    - [Input](#input)
+    - [Output](#output)
+  - [Include menu](#include-menu)
+    - [Input](#input-1)
+      - [Options](#options-2)
+    - [Output](#output-1)
+  - [No comments in output file](#no-comments-in-output-file)
+    - [Input](#input-2)
+    - [Output](#output-2)
+  - [Table](#table)
+    - [Input](#input-3)
+      - [Options](#options-3)
+    - [Output](#output-3)
+- [API Usage](#api-usage)
+  - [Configuration](#configuration)
+  - [Methods](#methods)
+- [Contributing](#contributing)
+- [License](#license)
+- [Authors](#authors)
+
 ## Usage
 
 1. Create a markdown file with any name, e.g. `index.md`.
@@ -40,7 +67,7 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
    npm install markdown-includes
    ```
 
-3. Run the compiler:
+3. Choose your method to run the compiler: CLI (as shown in this chapter) or [API](#api-usage).
 
    ```bash
    mdi <input file> [options]
@@ -56,7 +83,7 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
    When you want to compile multiple files, use the `*` as the `<input file>`, like this: `mdi ./*`. <br>
    It will compile all files in the current directory specified: `mdi examples/*` will compile all inside examples.
 
-   > ⚠️ The patterns are from `node:glob` on npm.
+   > ⚠️ The patterns are from [`glob`](https://npmjs.com/package/glob) on npm.
 
 ### Options
 
@@ -163,14 +190,14 @@ For example, if you have a JSON file with the following data:
 
 ```json
 [
-  {
-    "Name": "John",
-    "Age": 20
-  },
-  {
-    "Name": "Jane",
-    "Age": 21
-  }
+	{
+		"Name": "John",
+		"Age": 20
+	},
+	{
+		"Name": "Jane",
+		"Age": 21
+	}
 ]
 ```
 
@@ -205,14 +232,36 @@ When you want to use the API, you can use the default exported class to create a
 const Mdi = require("markdown-includes");
 
 const config = {
-  debug: true, // log actions to the console
-  output: "./out", // output directory
-  menuDepth: 3, // default menu depth
-  noComments: false, // remove comments from output
-  root: "./", // root directory
-  path: "path-to-file.md", // path to file
-  extensions: [".md", ".mdx"], // file-extensions to include
-  ignore: ["node_modules", ".git"], // folders to ignore
+	debug: true, // log actions to the console
+	output: "./out", // output directory
+	menuDepth: 3, // default menu depth
+	noComments: false, // remove comments from output
+	root: "./", // root directory
+	path: "path-to-file.md", // path to file
+	extensions: [".md", ".mdx"], // file-extensions to include
+	ignore: ["node_modules", ".git"], // folders to ignore
+};
+
+const compiler = new Mdi(config);
+
+// will use the path from the config, or path specified as an argument.
+compiler.compile();
+```
+
+Or TypeScript:
+
+```ts
+import Mdi, { Config } from "markdown-includes";
+
+const config: Config = {
+	debug: true, // log actions to the console
+	output: "./out", // output directory
+	menuDepth: 3, // default menu depth
+	noComments: false, // remove comments from output
+	root: "./", // root directory
+	path: "path-to-file.md", // path to file
+	extensions: [".md", ".mdx"], // file-extensions to include
+	ignore: ["node_modules", ".git"], // folders to ignore
 };
 
 const compiler = new Mdi(config);
@@ -224,7 +273,10 @@ compiler.compile();
 ### Methods
 
 - `compile(path?: string) => Promise<void>`: Compile the file.
-- `watch(path?: string)`: Watch the file for changes and recompile when it changes. Uses `node-watch` on npm.
+  - `path`: The path to the file. Uses the `path` from the config if not specified.
+- `watch(path?: string, debug?: boolean)`: Watch the file for changes and recompile when it changes. Uses [`node-watch`](https://npmjs.com/package/node-watch) on npm.
+  - `path`: The path to the file.
+  - `debug`: Whether to log the actions to the console.
 - `table(content: string, columns?: string[], debug?: boolean) => Promise<string[]>`)
   - `content`: The content of the file.
   - `columns`: The columns to include in the table.
@@ -236,10 +288,30 @@ compiler.compile();
   - `noComments`: Whether to remove comments from the output.
   - `debug`: Whether to log the actions to the console.
 
+## Contributing
+
+Contributions are welcome! Please open an issue or a pull request if you want to contribute.
+
+**Guidelines**:
+
+- Use `npm` to install dependencies.
+- Use `npm run build` to build the project.
+<!-- - Use `npm run test` to run the tests. -->
+- Use `npm run lint` to lint the project.
+- Files should be formatted with `prettier` according to the `.prettierrc.json` file.
+- Files should be linted with `eslint` according to the `.eslintrc.json` file.
+- Pull requests should be made to the `dev` branch.
+- Pull requests should be made with a description of the changes.
+- Pull requests have according branches, for example: `feature/feature-name` or `fix/fix-name`.
+
+When ready to push a feature or fix, please make sure to run `npm run build` and `npm run lint` before pushing.
+
+Guidelines are not set in stone, so if you have a better idea, please open an issue or a pull request.
+
 ## License
 
 MIT
 
-## Author
+## Authors
 
 [m10rten](https://github.com/m10rten)

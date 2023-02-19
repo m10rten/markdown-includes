@@ -1,78 +1,78 @@
 {
-  "name": "markdown-includes",
-  "version": "0.9.3",
-  "description": "🎯 A simple markdown compiler that allows you to include multiple functions in your markdown files.",
-  "main": "dist/index.js",
-  "publisher": "m10rten",
-  "publishConfig": {
-    "access": "public",
-    "registry": "https://registry.npmjs.org/",
-    "tag": "latest"
-  },
-  "private": false,
-  "scripts": {
-    "dev": "nodemon src/cli/index.ts",
-    "build": "tsc",
-    "watch": "tsc -w",
-    "prestart": "npm run build",
-    "start": "node dist/cli/index.js",
-    "lint": "eslint src/**/*.ts",
-    "prepublish": "npm run build",
-    "prepublishOnly": "npm run lint && npm run build && npm run replace",
-    "check:version": "npx @jetvil/cli version --package markdown-includes",
-    "replace": "npx ts-node to-js.ts"
-  },
-  "bin": {
-    "mdi": "dist/cli/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/m10rten/markdown-includes.git"
-  },
-  "keywords": [
-    "markdown",
-    "compiler",
-    "compile",
-    "top-down",
-    "files",
-    "script",
-    "cli",
-    "markdown-includes",
-    "markdown-include",
-    "include",
-    "includes",
-    "comments",
-    "menu",
-    "generator",
-    "include",
-    "includes",
-    "include-files",
-    "include-files-in-markdown",
-    "table",
-    "table-of-contents"
-  ],
-  "author": "m10rten",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/m10rten/markdown-includes/issues"
-  },
-  "homepage": "https://github.com/m10rten/markdown-includes#readme",
-  "devDependencies": {
-    "@types/glob": "^8.0.1",
-    "@types/node": "^18.14.0",
-    "@typescript-eslint/eslint-plugin": "^5.51.0",
-    "@typescript-eslint/parser": "^5.51.0",
-    "eslint": "^8.34.0",
-    "nodemon": "^2.0.20",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
-  },
-  "dependencies": {
-    "glob": "^8.1.0",
-    "node-watch": "^0.7.3"
-  }
+	"name": "markdown-includes",
+	"version": "0.9.4",
+	"description": "🎯 A simple markdown compiler that allows you to include multiple functions in your markdown files.",
+	"main": "dist/index.js",
+	"publisher": "m10rten",
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/",
+		"tag": "latest"
+	},
+	"private": false,
+	"scripts": {
+		"dev": "nodemon src/cli/index.ts",
+		"build": "tsc",
+		"watch": "tsc -w",
+		"prestart": "npm run build",
+		"start": "node dist/cli/index.js",
+		"lint": "eslint src/**/*.ts",
+		"prepublish": "npm run build",
+		"prepublishOnly": "npm run lint && npm run build && npm run replace",
+		"check:version": "npx @jetvil/cli version --package markdown-includes",
+		"replace": "npx ts-node to-js.ts"
+	},
+	"bin": {
+		"mdi": "dist/cli/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/m10rten/markdown-includes.git"
+	},
+	"keywords": [
+		"markdown",
+		"compiler",
+		"compile",
+		"top-down",
+		"files",
+		"script",
+		"cli",
+		"markdown-includes",
+		"markdown-include",
+		"include",
+		"includes",
+		"comments",
+		"menu",
+		"generator",
+		"include",
+		"includes",
+		"include-files",
+		"include-files-in-markdown",
+		"table",
+		"table-of-contents"
+	],
+	"author": "m10rten",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/m10rten/markdown-includes/issues"
+	},
+	"homepage": "https://github.com/m10rten/markdown-includes#readme",
+	"devDependencies": {
+		"@types/glob": "^8.0.1",
+		"@types/node": "^18.14.0",
+		"@typescript-eslint/eslint-plugin": "^5.51.0",
+		"@typescript-eslint/parser": "^5.51.0",
+		"eslint": "^8.34.0",
+		"nodemon": "^2.0.20",
+		"ts-node": "^10.9.1",
+		"typescript": "^4.9.5"
+	},
+	"engines": {
+		"node": ">=18.0.0",
+		"npm": ">=8.0.0"
+	},
+	"dependencies": {
+		"glob": "^8.1.0",
+		"node-watch": "^0.7.3"
+	}
 }
