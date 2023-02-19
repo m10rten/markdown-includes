@@ -14,7 +14,7 @@ import MarkdownIncludes, { Config } from "../index";
     console.info(`Thanks for using markdown-includes!💗`);
 
     if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
-      console.info(require("../package.json").version);
+      console.info(require(process.cwd() + "/package.json").version);
       process.exit(0);
     }
 
