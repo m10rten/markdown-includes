@@ -2,16 +2,18 @@ import { glob } from "glob";
 import { table } from "./table";
 import { slash } from "./utils/clean";
 import { getFiles, read } from "./utils/file";
-import { log } from "./utils/log";
+import { create } from "./utils/log";
 import { getTabs, link } from "./utils/menu";
 
 export type Command = "&|include" | "&|menu" | "&|no_comments" | "&|table";
 
-export const parse = async (str: string, dir: string, md: string, nc: boolean) => {
+export const parse = async (str: string, dir: string, md: number, nc: boolean, db?: boolean) => {
+  const log = create(db);
+
   log(`Parsing ${dir} ...`);
   const lines: Array<string> = [];
   let includeMenu = false;
-  let menuDepth: number = parseInt(md as string);
+  let menuDepth: number = md;
   const noComments: boolean = nc;
   let removeComments = false;
 
@@ -30,17 +32,18 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
         const filePath = args[0].replaceAll("`", "").replaceAll("'", "").replaceAll('"', ""); // remove the `&|include` and trim the spaces.
 
         if (!filePath) throw new SyntaxError("No file path provided after `&|include`");
-        const innerDir = slash(dir + "/" + filePath.split("/").slice(0, -1).join("/").replaceAll("*", ""));
+        const innerDir = slash(
+          `${dir ? dir + "/" : ""}` + filePath.split("/").slice(0, -1).join("/").replaceAll("*", ""),
+        );
 
         const fileName = filePath.split("/").slice(-1)[0];
         const pathArg = slash(innerDir + "/" + fileName);
 
         const files = glob.hasMagic(pathArg) ? await getFiles(innerDir, pathArg) : new Set([pathArg]);
-
         for (const file of files) {
           log(`Adding ${file} ...`);
           const fileContent = await read(file);
-          const inner = await parse(fileContent, innerDir, md, nc);
+          const inner = await parse(fileContent, innerDir, md, nc, db);
           lines.push(...inner);
         }
 
@@ -66,7 +69,7 @@ export const parse = async (str: string, dir: string, md: string, nc: boolean) =
         const tablePosition: number = lines.findIndex((line) => line.trim().startsWith("&|table"));
 
         const fileStr: string = await read(`${dir}/${file}`);
-        const tableContent: Array<string> = await table(fileStr, selected?.length > 0 ? selected : undefined);
+        const tableContent: Array<string> = await table(fileStr, selected?.length > 0 ? selected : undefined, db);
         lines.push(...tableContent);
 
         // remove the `&|table` line.

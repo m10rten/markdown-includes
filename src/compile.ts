@@ -1,26 +1,37 @@
 /* eslint-disable no-console */
-import { mkdir } from "fs/promises";
-import { parse } from "./parse";
-import { getKeyValue, hasKey } from "./utils/cli";
+import { lstat, mkdir } from "fs/promises";
+import { parse as standalone_parse } from "./parse";
 import { exists, read, write } from "./utils/file";
-import { log } from "./utils/log";
+import { create } from "./utils/log";
+import { Config } from "./index";
+import { slash } from "./utils/clean";
 
-export const compile = async (path: string, args: Array<string>) => {
+export const compile = async ({ path, extensions, menuDepth, ignore, noComments, root, output, debug }: Config) => {
+  const log = create(debug);
+
   // validate the path
   if (!path) throw new Error("No file path provided");
-  if (!path.endsWith(".md")) throw new Error("File must be a markdown file (.md)");
+  if (!path.endsWith(".md") || extensions?.includes(path.split(".").slice(-1)[0]))
+    return log(`Skipping ${path} (not a markdown file or included in extension list)`);
+  if (ignore?.includes(path.split("/").slice(-1)[0])) return log(`Skipping ${path} (ignored)`);
   if (path.includes("\\")) throw new Error("File path must be in unix format (use / instead of \\)");
   if (!(await exists(path))) throw new Error("File does not exist");
 
-  log("Reading file...");
+  log(`Reading file ${path}...`);
+  const stat = await lstat(path);
+  const [isDir, isFile] = [stat.isDirectory(), stat.isFile()];
+  if (isDir) return;
+  if (!isFile) throw new Error("Path is not a file");
   const content = await read(path);
 
   // for each `&|include` in content, import the file and replace it in the content.
-  const root = path.split("/").slice(0, -1).join("/");
+  const dir = path.split("/").slice(0, -1).join("/");
+  const rootPath = root ? root + "/" + dir : dir;
 
-  const md: string = getKeyValue(args, "--menu-depth") ?? "3";
-  const nc: boolean = hasKey(args, "--no-comments") ?? false;
-  const finalFile = await parse(content, root, md, nc);
+  const md: number = menuDepth ?? 3;
+  const nc: boolean = noComments ?? false;
+
+  const finalFile = await standalone_parse(content, slash(rootPath), md, nc, debug);
 
   log("Removing empty lines...");
   for (let i = 0; i < finalFile.length; i++) {
@@ -35,9 +46,9 @@ export const compile = async (path: string, args: Array<string>) => {
   log("Cleaning up...");
   const cleaned = finalFile.join("\n").trim() + "\n";
 
-  const out: string | null = getKeyValue(args, "--out") ?? null;
+  const out: string | null = output ?? null;
   log("Creating output file...");
-  const outPath: string = out ?? `out/${path}`;
+  const outPath: string = out ? `${out}/${path}` : `out/${path}`;
   let stacked = "";
   log(`Creating directories for ${outPath}...`);
 

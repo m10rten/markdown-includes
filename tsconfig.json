@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["ES6", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020", "ES2022"],
+    "lib": ["ES7", "ES6", "ES2015", "ES2016", "ES2017", "ES2018", "ES2019", "ES2020", "ES2022"],
     "target": "ES6" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
 
     /* Modules */
@@ -45,7 +45,10 @@
 
     /* Completeness */
     "skipDefaultLibCheck": true /* Skip type checking .d.ts files that are included with TypeScript. */,
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true /* Skip type checking all .d.ts files. */,
+
+    /* Experimental Options */
+    "experimentalDecorators": true /* Enables experimental support for ES7 decorators. */
   },
   "buildOptions": {
     "force": true

@@ -2,10 +2,10 @@ export const hasKey = (args: NodeJS.Process["argv"], key: string): boolean => {
   return args.includes(key);
 };
 
-export const getKeyValue = (args: NodeJS.Process["argv"], key: string): string | null => {
+export const getKeyValue = (args: NodeJS.Process["argv"], key: string): string | null | undefined => {
   const index = args.indexOf(key);
   if (index === -1) {
-    return null;
+    return undefined;
   }
   return args[index + 1];
 };

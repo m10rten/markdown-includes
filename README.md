@@ -68,6 +68,9 @@ Compile multiple Markdown files into 1, easily create a menu, remove comments an
 - `--menu-depth <number>`: Specify the default system depth of the menu. System default is `3`.
 - `--no-comments`: Remove comments from the output file. System default is `false`.
 - `--root <path>`: Specify the root folder. System default is the current working directory.
+- `--config <path>` | `-c`: Specify the config file. System default is `mdi.config.js` in the current working directory.
+- `--extensions <list>` Set the extensions to include. (default: `.md,.mdx`)
+- `--ignore <list>`: Set the folders to ignore. (default: `node_modules,.git`)
 
 ## Examples
 

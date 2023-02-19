@@ -18,7 +18,7 @@ export const exists = async (file: string): Promise<boolean> => {
   return new Promise<boolean>((resolve) => {
     const is = existsSync(file);
     if (is) return resolve(true);
-    resolve(false);
+    return resolve(false);
   });
 };
 
@@ -48,8 +48,8 @@ export const getFiles = async (root: string, path: string): Promise<Set<string>>
     return glob(slash(path.includes(root) ? path : `${root}/${path}`), { root }, (err, files) => {
       if (err) reject(err);
       const set = new Set(files);
-      if (set.size === 0) reject(`No files found at ${path}`);
-      resolve(set);
+      if (set.size === 0) return reject(`No files found at ${path}`);
+      return resolve(set);
     });
   });
 };
