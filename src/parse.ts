@@ -51,6 +51,7 @@ export const parse = async (str: string, dir: string, md: number, nc: boolean, d
 			}
 			case "&|menu": {
 				includeMenu = true;
+				log(parseInt(args[0]), args, md);
 				if (args.length > 0) menuDepth = parseInt(args[0]);
 				lines.push(line);
 				break;

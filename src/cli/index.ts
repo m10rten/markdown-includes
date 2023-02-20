@@ -5,9 +5,9 @@
 import watch from "node-watch";
 import { log } from "../utils/log";
 import { slash } from "../utils/clean";
-import { getKeyValue, getValueByIndex, hasKey } from "../utils/cli";
-import { exists, getFiles, read } from "../utils/file";
-import MarkdownIncludes, { Config } from "../index";
+import { getKeyValue, hasKey } from "../utils/cli";
+import { getFiles } from "../utils/file";
+import { default as create_compiler, Config } from "../index";
 
 if (require.main !== module) {
 	throw new Error("This file should not be imported");
@@ -53,41 +53,31 @@ if (require.main !== module) {
 		const config: Config = {};
 		const configStr = getKeyValue(args, "-c") || getKeyValue(args, "--config") || "mdi.config.js";
 
-		if (configStr && (await exists(configStr))) {
-			const configPath = slash(process.cwd() + "/" + configStr);
-			log(`Using config file: ${configPath}`);
-			if (configPath.endsWith(".js") || configPath.endsWith(".ts")) {
-				const configContent = require(configPath);
-				Object.assign(config, configContent);
-			} else {
-				const configContent = await read(configPath);
-				const parsedConfig: Config = JSON.parse(configContent);
-				Object.assign(config, parsedConfig);
+		const upperToDash = (str: string) => str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+
+		log(upperToDash("menuDepth"));
+
+		const get = (key: keyof Config, isOwnValue: boolean) => {
+			const dashed = "--" + upperToDash(key);
+			const value = isOwnValue ? hasKey(args, dashed) : (getKeyValue(args, dashed) || config[key]) ?? undefined;
+			if (value !== undefined) {
+				return value;
 			}
-		}
+			return undefined;
+		};
 
-		const markdownIncludes = new MarkdownIncludes({
+		const markdownIncludes = await create_compiler({
 			...config,
-			menuDepth: parseInt(getKeyValue(args, "--menu-depth") as string) ?? config?.menuDepth ?? undefined,
-			noComments: (hasKey(args, "--no-comments") || config?.noComments) ?? undefined,
-			debug: (hasKey(args, "--debug") || config?.debug) ?? undefined,
-			extensions:
-				getKeyValue(args, "--extensions")
-					?.split(",")
-					.map((ext) => ext.trim()) ??
-				config?.extensions ??
-				undefined,
-			ignore:
-				getKeyValue(args, "--ignore")
-					?.split(",")
-					.map((dir) => dir.trim()) ??
-				config?.ignore ??
-				undefined,
-			output: getKeyValue(args, "--out") ?? config?.output ?? undefined,
-			root: getKeyValue(args, "--root") ?? config?.root ?? undefined,
-			path: getValueByIndex(args, 0) ?? config?.path ?? undefined,
+			config: configStr,
+			menuDepth: get("menuDepth", false) as number | undefined,
+			noComments: get("noComments", true) as boolean | undefined,
+			debug: get("debug", true) as boolean | undefined,
+			extensions: get("extensions", false) as string[] | undefined,
+			ignore: get("ignore", false) as string[] | undefined,
+			output: get("output", false) as string | undefined,
+			root: get("root", false) as string | undefined,
+			path: get("path", false) as string | undefined,
 		});
-
 		await markdownIncludes.compile(args[0]);
 
 		log("Done compiling!");

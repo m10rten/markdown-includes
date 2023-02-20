@@ -4,7 +4,7 @@ import { table as standalone_table } from "./table";
 import { parse as standalone_parse } from "./parse";
 
 import { slash } from "./utils/clean";
-import { getFiles } from "./utils/file";
+import { exists, getFiles, read } from "./utils/file";
 import { create } from "./utils/log";
 import watch from "node-watch";
 
@@ -32,13 +32,51 @@ export declare type Config = {
 };
 
 /**
+ * The creation function for the markdown-includes compiler
+ * @param {Config} config - The configuration object
+ * @param {string} [config.config] - The path to the (config) file, default: `./mdi.config.js`
+ * @returns
+ */
+export default async function ({
+	config,
+	debug,
+	extensions,
+	ignore,
+	menuDepth,
+	noComments,
+	output,
+	path,
+	root,
+}: Config = {}): Promise<MarkdownIncludes> {
+	const configPath = slash(process.cwd() + "/" + config ?? "./mdi.config.js");
+	const { default: configContent }: { default: Config } =
+		config && (await exists(configPath)) && (config?.endsWith(".js") || config?.endsWith(".ts"))
+			? await import(configPath)
+			: config && (await exists(configPath))
+			? { default: await read(configPath) }
+			: { default: {} };
+
+	return new MarkdownIncludes({
+		config: config ?? configContent.config,
+		debug: debug ?? configContent.debug,
+		extensions: extensions ?? configContent.extensions,
+		ignore: ignore ?? configContent.ignore,
+		menuDepth: menuDepth ?? configContent.menuDepth,
+		noComments: noComments ?? configContent.noComments,
+		output: output ?? configContent.output,
+		path: path ?? configContent.path,
+		root: root ?? configContent.root,
+	});
+}
+
+/**
  * @class MarkdownIncludes
  * @classdesc The main class for the markdown-includes compiler
  * @param {Config} config - The configuration object
  */
-class MarkdownIncludes {
+export class MarkdownIncludes {
 	private config: Config;
-	constructor(config?: Config) {
+	constructor(config: Config) {
 		this.config = {
 			root: config?.root ?? "./",
 			noComments: config?.noComments ?? false,
@@ -151,5 +189,3 @@ class MarkdownIncludes {
 		return;
 	}
 }
-
-export default MarkdownIncludes;

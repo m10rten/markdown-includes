@@ -235,7 +235,7 @@ For example, if you have a JSON file with the following data:
 When you want to use the API, you can use the default exported class to create a new compiler instance.
 
 ```js
-const Mdi = require("markdown-includes");
+const create = require("markdown-includes");
 
 const config = {
 	debug: true, // log actions to the console
@@ -248,7 +248,7 @@ const config = {
 	ignore: ["node_modules", ".git"], // folders to ignore
 };
 
-const compiler = new Mdi(config);
+const compiler = await create(config);
 
 // will use the path from the config, or path specified as an argument.
 compiler.compile();
@@ -257,22 +257,24 @@ compiler.compile();
 Or TypeScript:
 
 ```ts
-import Mdi, { Config } from "markdown-includes";
+import create, { Config } from "markdown-includes";
 
 const config: Config = {
-	debug: true, // log actions to the console
-	output: "./out", // output directory
-	menuDepth: 3, // default menu depth
-	noComments: false, // remove comments from output
-	root: "./", // root directory
-	path: "path-to-file.md", // path to file
-	extensions: [".md", ".mdx"], // file-extensions to include
-	ignore: ["node_modules", ".git"], // folders to ignore
+  ...
 };
 
-const compiler = new Mdi(config);
+const compiler = await create(config);
 
-// will use the path from the config, or path specified as an argument.
+compiler.compile();
+```
+
+The compiler can also read the config from a file. The config file should export the config object.
+
+```js
+import create from "markdown-includes";
+
+const compiler = await create("./path-to-config.js");
+
 compiler.compile();
 ```
 
