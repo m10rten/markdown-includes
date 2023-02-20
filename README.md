@@ -273,7 +273,7 @@ The compiler can also read the config from a file. The config file should export
 ```js
 import create from "markdown-includes";
 
-const compiler = await create("./path-to-config.js");
+const compiler = await create({ config: "./path-to-config.js" });
 
 compiler.compile();
 ```
