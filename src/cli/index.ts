@@ -18,7 +18,7 @@ if (require.main !== module) {
 		console.info(`Thanks for using markdown-includes!💗`);
 
 		if (hasKey(process.argv, "--version") || hasKey(process.argv, "-v")) {
-			console.info(require(process.cwd() + "/package.json").version);
+			console.info(require("../../package.json").version);
 			process.exit(0);
 		}
 

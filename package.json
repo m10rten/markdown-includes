@@ -1,6 +1,6 @@
 {
 	"name": "markdown-includes",
-	"version": "0.9.7",
+	"version": "0.9.8",
 	"description": "🎯 A simple markdown compiler that allows you to include multiple functions in your markdown files.",
 	"main": "dist/index.js",
 	"publisher": "m10rten",
@@ -58,11 +58,11 @@
 	},
 	"homepage": "https://github.com/m10rten/markdown-includes#readme",
 	"devDependencies": {
-		"@types/glob": "^8.0.1",
-		"@types/node": "^18.14.0",
-		"@typescript-eslint/eslint-plugin": "^5.51.0",
-		"@typescript-eslint/parser": "^5.51.0",
-		"eslint": "^8.34.0",
+		"@types/glob": "^8.1.0",
+		"@types/node": "^18.14.2",
+		"@typescript-eslint/eslint-plugin": "^5.53.0",
+		"@typescript-eslint/parser": "^5.53.0",
+		"eslint": "^8.35.0",
 		"nodemon": "^2.0.20",
 		"ts-node": "^10.9.1",
 		"typescript": "^4.9.5"
